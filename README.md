@@ -27,4 +27,4 @@ in and putting it in `src/main/resources/session.txt` as the first line
 
 ```txt
 fisjdfosidfjsdoifjdsfoijdsfosdijf // <- probably base 64 encoded session ID
-``
+```
