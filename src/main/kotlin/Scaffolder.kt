@@ -1,7 +1,5 @@
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -36,30 +34,61 @@ object Scaffolder {
             .build()
         val response = client.newCall(request).execute()
         /// Save the response to a file called day_$day.txt
-        val file = java.io.File("src/main/resources/day_$day.txt")
+        val file = java.io.File("src/test/resources/day_$day.txt")
         file.writeText(response.body?.string() ?: "")
     }
 
     private fun scaffoldTest(day: Int) {
         val testClass = ClassName("", "Day${day}Test")
-        //TODO("Not yet implemented")
+        val file = FileSpec.builder(testClass)
+            .addType(
+                TypeSpec.Companion.classBuilder(testClass)
+                    .addFunction(
+                        FunSpec.builder("testPart1")
+                            .returns(Unit::class)
+                            .addStatement("val input = javaClass.getResourceAsStream(\"/day_$day.txt\").bufferedReader().readLines()")
+                            .addStatement("val output = Day$day.part1(input)")
+                            .addStatement("assertThat(output).isEqualTo(\"\")")
+                            .addAnnotation(org.junit.jupiter.api.Test::class.java)
+                            .build()
+                    )
+                    .addFunction(
+                        FunSpec.builder("testPart2")
+                            .returns(Unit::class)
+                            .addStatement("val input = javaClass.getResourceAsStream(\"/day_$day.txt\").bufferedReader().readLines()")
+                            .addStatement("val output = Day$day.part1(input)")
+                            .addStatement("assertThat(output).isEqualTo(\"\")")
+                            .addAnnotation(org.junit.jupiter.api.Test::class.java)
+                            .build()
+                    )
+                    .build()
+            )
+            .addImport(org.assertj.core.api.AssertionsForClassTypes::class.java, "assertThat")
+            .build()
+        file.writeTo(java.io.File("src/test/kotlin"))
     }
 
     private fun scaffoldMain(day: Int) {
         val dayClass = ClassName("", "Day$day")
         val file = FileSpec.builder(dayClass)
-            .addType(TypeSpec.Companion.classBuilder(dayClass)
-                .addFunction(FunSpec.builder("part1")
-                    .addParameter("input", String::class)
-                    .returns(String::class)
-                    .addStatement("return input")
-                    .build())
-                .addFunction(FunSpec.builder("part2")
-                    .addParameter("input", String::class)
-                    .returns(String::class)
-                    .addStatement("return input")
-                    .build())
-                .build()).build()
+            .addType(
+                TypeSpec.Companion.objectBuilder(dayClass)
+                    .addFunction(
+                        FunSpec.builder("part1")
+                            .addParameter("input", List::class.parameterizedBy(String::class))
+                            .returns(String::class)
+                            .addStatement("return \"\"")
+                            .build()
+                    )
+                    .addFunction(
+                        FunSpec.builder("part2")
+                            .addParameter("input", List::class.parameterizedBy(String::class))
+                            .returns(String::class)
+                            .addStatement("return \"\"")
+                            .build()
+                    )
+                    .build()
+            ).build()
         file.writeTo(java.io.File("src/main/kotlin"))
     }
 }
