@@ -13,6 +13,8 @@ repositories {
 dependencies {
     implementation("com.squareup:kotlinpoet:1.14.2")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    // Usually we would reserve these for the testImplementation configuration, but we need them
+    // in the main configuration to run the scaffolder.
     implementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     implementation("org.assertj:assertj-core:3.24.2")
     testImplementation(kotlin("test"))
