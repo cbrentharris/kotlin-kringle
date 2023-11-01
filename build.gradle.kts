@@ -11,6 +11,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.squareup:kotlinpoet:1.14.2")
     testImplementation(kotlin("test"))
 }
 
