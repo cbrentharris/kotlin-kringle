@@ -1,3 +1,7 @@
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.TypeSpec
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -37,10 +41,25 @@ object Scaffolder {
     }
 
     private fun scaffoldTest(day: Int) {
+        val testClass = ClassName("", "Day${day}Test")
         //TODO("Not yet implemented")
     }
 
     private fun scaffoldMain(day: Int) {
-        //TODO("Not yet implemented")
+        val dayClass = ClassName("", "Day$day")
+        val file = FileSpec.builder(dayClass)
+            .addType(TypeSpec.Companion.classBuilder(dayClass)
+                .addFunction(FunSpec.builder("part1")
+                    .addParameter("input", String::class)
+                    .returns(String::class)
+                    .addStatement("return input")
+                    .build())
+                .addFunction(FunSpec.builder("part2")
+                    .addParameter("input", String::class)
+                    .returns(String::class)
+                    .addStatement("return input")
+                    .build())
+                .build()).build()
+        file.writeTo(java.io.File("src/main/kotlin"))
     }
 }
