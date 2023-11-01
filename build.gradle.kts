@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation("com.squareup:kotlinpoet:1.14.2")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
     testImplementation(kotlin("test"))
 }
 
@@ -25,4 +26,10 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+}
+
+tasks.register<JavaExec>("scaffold") {
+    description = "Scaffolds a new day of Advent of Code."
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass = "ScaffolderKt"
 }
