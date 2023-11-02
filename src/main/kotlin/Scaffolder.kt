@@ -8,18 +8,21 @@ import okhttp3.Request
  *
  * Usage: `./gradlew scaffold --args <day>`
  *
+ * If you want to overwrite existing files, use `./gradlew scaffold --args "<day> force"`
+ *
  * This will create a new file in `src/main/kotlin` and `src/test/kotlin` for the given day,
  * and download the input for that day.
  */
 fun main(args: Array<String>) {
     val day = args[0].toInt()
-    Scaffolder.scaffold(day)
+    val force = !args.find { it == "force" }.isNullOrEmpty()
+    Scaffolder.scaffold(day, force)
 }
 
 object Scaffolder {
-    fun scaffold(day: Int) {
-        scaffoldMain(day)
-        scaffoldTest(day)
+    fun scaffold(day: Int, force: Boolean) {
+        scaffoldMain(day, force)
+        scaffoldTest(day, force)
         downloadInput(day)
     }
 
@@ -38,7 +41,7 @@ object Scaffolder {
         file.writeText(response.body?.string() ?: "")
     }
 
-    private fun scaffoldTest(day: Int) {
+    private fun scaffoldTest(day: Int, force: Boolean) {
         val testClass = ClassName("", "Day${day}Test")
         val file = FileSpec.builder(testClass)
             .addType(
@@ -65,10 +68,14 @@ object Scaffolder {
             )
             .addImport(org.assertj.core.api.AssertionsForClassTypes::class.java, "assertThat")
             .build()
+        val fileToWrite = java.io.File("src/test/kotlin/${testClass.simpleName}.kt")
+        if (fileToWrite.exists() && !force) {
+            throw IllegalStateException("File already exists: $fileToWrite")
+        }
         file.writeTo(java.io.File("src/test/kotlin"))
     }
 
-    private fun scaffoldMain(day: Int) {
+    private fun scaffoldMain(day: Int, force: Boolean) {
         val dayClass = ClassName("", "Day$day")
         val file = FileSpec.builder(dayClass)
             .addType(
@@ -89,6 +96,10 @@ object Scaffolder {
                     )
                     .build()
             ).build()
+        val fileToWrite = java.io.File("src/main/kotlin/${dayClass.simpleName}.kt")
+        if (fileToWrite.exists() && !force) {
+            throw IllegalStateException("File already exists: $fileToWrite")
+        }
         file.writeTo(java.io.File("src/main/kotlin"))
     }
 }
