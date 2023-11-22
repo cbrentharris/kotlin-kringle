@@ -47,10 +47,28 @@ object Scaffolder {
             .addType(
                 TypeSpec.Companion.classBuilder(testClass)
                     .addFunction(
+                        FunSpec.builder("testExamplePart1")
+                            .returns(Unit::class)
+                            .addStatement("val input: List<String> = emptyList()")
+                            .addStatement("val output = Day$day.part1(input)")
+                            .addStatement("assertThat(output).isEqualTo(\"\")")
+                            .addAnnotation(org.junit.jupiter.api.Test::class.java)
+                            .build()
+                    )
+                    .addFunction(
                         FunSpec.builder("testPart1")
                             .returns(Unit::class)
                             .addStatement("val input = javaClass.getResourceAsStream(\"/day_$day.txt\").bufferedReader().readLines()")
                             .addStatement("val output = Day$day.part1(input)")
+                            .addStatement("assertThat(output).isEqualTo(\"\")")
+                            .addAnnotation(org.junit.jupiter.api.Test::class.java)
+                            .build()
+                    )
+                    .addFunction(
+                        FunSpec.builder("testExamplePart2")
+                            .returns(Unit::class)
+                            .addStatement("val input: List<String> = emptyList()")
+                            .addStatement("val output = Day$day.part2(input)")
                             .addStatement("assertThat(output).isEqualTo(\"\")")
                             .addAnnotation(org.junit.jupiter.api.Test::class.java)
                             .build()
