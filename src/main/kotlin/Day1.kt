@@ -17,9 +17,7 @@ object Day1 {
 
     private fun findFirstAndLastDigitV2(i: String): Int {
         val words = listOf("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
-        val newI = words.zip(words.indices).fold(i) { acc, wordAndIndex ->
-            val word = wordAndIndex.first
-            val index = wordAndIndex.second
+        val newI = words.zip(words.indices).fold(i) { acc, (word, index) ->
             val replacement = word.first() + index.toString() + word.last()
             acc.replace(word, replacement)
         }
