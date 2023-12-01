@@ -30,7 +30,7 @@ object Scaffolder {
         val client = OkHttpClient()
         // Load the session ID from a config file in the resources directory
         val session = Scaffolder::class.java.getResourceAsStream("/session.txt").bufferedReader().readLine()
-        val downloadUrl = "https://adventofcode.com/2022/day/$day/input"
+        val downloadUrl = "https://adventofcode.com/2023/day/$day/input"
         val request = Request.Builder()
             .url(downloadUrl)
             .addHeader("Cookie", "session=$session")
