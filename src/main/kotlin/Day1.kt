@@ -16,19 +16,13 @@ object Day1 {
     }
 
     private fun findFirstAndLastDigitV2(i: String): Int {
-        val wordsToReplacements = mapOf(
-            "zero" to "0o",
-            "one" to "o1e",
-            "two" to "t2o",
-            "three" to "t3e",
-            "four" to "4",
-            "five" to "5e",
-            "six" to "6",
-            "seven" to "7n",
-            "eight" to "e8t",
-            "nine" to "9"
-        )
-        val newI = wordsToReplacements.toList().fold(i) { acc, word -> acc.replace(word.first, word.second) }
+        val words = listOf("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+        val newI = words.zip(words.indices).fold(i) { acc, wordAndIndex ->
+            val word = wordAndIndex.first
+            val index = wordAndIndex.second
+            val replacement = word.first() + index.toString() + word.last()
+            acc.replace(word, replacement)
+        }
         return findFirstAndLastDigit(newI)
     }
 }
