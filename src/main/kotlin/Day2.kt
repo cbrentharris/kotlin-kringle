@@ -27,6 +27,15 @@ object Day2 {
         }
     }
 
+    fun part1(input: List<String>): String {
+        return sumOfGamesWithTarget(
+            input.map(Game::parseGame),
+            listOf(
+                Cube("red", 12), Cube("green", 13), Cube("blue", 14)
+            )
+        ).toString()
+    }
+
     private fun sumOfGamesWithTarget(input: List<Game>, targets: List<Cube>): Int {
         val index = targets.associateBy { it.color }
         return input.filter {
@@ -39,15 +48,6 @@ object Day2 {
                 }
             }
         }.sumOf { it.id }
-    }
-
-    fun part1(input: List<String>): String {
-        return sumOfGamesWithTarget(
-            input.map(Game::parseGame),
-            listOf(
-                Cube("red", 12), Cube("green", 13), Cube("blue", 14)
-            )
-        ).toString()
     }
 
     fun part2(input: List<String>): String {
