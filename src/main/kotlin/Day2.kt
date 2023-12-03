@@ -39,11 +39,11 @@ object Day2 {
     private fun sumOfGamesWithTarget(input: List<Game>, targets: List<Cube>): Int {
         val index = targets.associateBy { it.color }
         return input.filter {
-            it.cubePulls.all { cubes ->
-                cubes.all { cube ->
-                    cube.count <= index.getOrDefault(
-                        cube.color,
-                        cube
+            it.cubePulls.all {
+                it.all {
+                    it.count <= index.getOrDefault(
+                        it.color,
+                        it
                     ).count
                 }
             }
@@ -59,7 +59,7 @@ object Day2 {
             val minimumCubesNeeded = it.cubePulls.flatten()
                 .groupBy { it.color }
                 .mapValues { it.value.maxBy { it.count } }
-            minimumCubesNeeded.map { it.value!!.count }.reduce { a, b -> a * b }
+            minimumCubesNeeded.map { it.value.count }.reduce { a, b -> a * b }
         }.sum()
     }
 }
