@@ -3,7 +3,7 @@ import kotlin.collections.List
 import kotlin.math.pow
 
 object Day4 {
-    data class CardData(val cardIndex: Int, val winningNumbers: List<Int>, val cardNumbers: Set<Int>) {
+    data class CardData(val cardIndex: Int, val winningNumberCount: Int) {
         companion object {
             fun parseCardData(input: String): CardData {
                 val (cardInformation, numberInformation) = input.split(":")
@@ -11,7 +11,8 @@ object Day4 {
                 val (winningNumberInformation, cardNumberInformation) = numberInformation.split("|")
                 val winningNumbers = parseNumbers(winningNumberInformation)
                 val cardNumbers = parseNumbers(cardNumberInformation)
-                return CardData(cardIndex, winningNumbers, cardNumbers.toSet())
+                val winningNumberCount = cardNumbers.filter { winningNumbers.contains(it) }.count()
+                return CardData(cardIndex, winningNumberCount)
             }
 
             fun parseNumbers(numbers: String): List<Int> {
@@ -29,7 +30,7 @@ object Day4 {
         }
 
         fun matchingNumbers(): Int {
-            return winningNumbers.filter { cardNumbers.contains(it) }.count()
+            return winningNumberCount
         }
     }
 
