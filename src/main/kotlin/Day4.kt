@@ -15,7 +15,7 @@ object Day4 {
                 return CardData(cardIndex, winningNumberCount)
             }
 
-            fun parseNumbers(numbers: String): List<Int> {
+            private fun parseNumbers(numbers: String): List<Int> {
                 return numbers.trimStart(*" ".toCharArray())
                     .trimEnd(*" ".toCharArray())
                     .split(" ")
@@ -25,30 +25,23 @@ object Day4 {
         }
 
         fun score(): Int {
-            val exp = matchingNumbers() - 1
+            val exp = winningNumberCount - 1
             return 2.0.pow(exp.toDouble()).toInt()
-        }
-
-        fun matchingNumbers(): Int {
-            return winningNumberCount
         }
     }
 
     fun part1(input: List<String>): String = input.map(CardData::parseCardData).map(CardData::score).sum().toString()
 
-    fun part2(input: List<String>): String = findTotalCards(input.map(CardData::parseCardData), emptyMap()).toString()
+    fun part2(input: List<String>): String = findTotalCards(input.map(CardData::parseCardData)).toString()
 
-    fun findTotalCards(cards: List<CardData>, cardMultiplierCount: Map<Int, Int>): Int {
-        if (cards.isEmpty()) {
-            return 0
-        }
-        val card = cards.first()
-        val multiplier = (cardMultiplierCount[card.cardIndex] ?: 0) + 1
-        val updateCardMultiplierCount = (card.cardIndex..card.cardIndex + card.matchingNumbers())
-            .map { it to 1 * multiplier }.toMap().toMutableMap()
-        cardMultiplierCount.filter { (k, _) -> k > card.cardIndex }.forEach { (key, value) ->
-            updateCardMultiplierCount.merge(key, value) { a, b -> a + b }
-        }
-        return multiplier + findTotalCards(cards.drop(1), updateCardMultiplierCount)
+    private fun findTotalCards(cards: List<CardData>): Int {
+        val cardMultiplierCount = mutableMapOf<Int, Int>()
+        return cards.map {
+            val multiplier = (cardMultiplierCount[it.cardIndex] ?: 0) + 1
+            (it.cardIndex + 1..it.cardIndex + it.winningNumberCount).forEach {
+                cardMultiplierCount.merge(it, multiplier) { a, b -> a + b }
+            }
+            multiplier
+        }.sum()
     }
 }
