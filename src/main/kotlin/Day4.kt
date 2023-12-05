@@ -28,6 +28,10 @@ object Day4 {
             val exp = winningNumberCount - 1
             return 2.0.pow(exp.toDouble()).toInt()
         }
+
+        fun cardIndexesToCopy(): IntRange {
+            return (cardIndex + 1..cardIndex + winningNumberCount)
+        }
     }
 
     fun part1(input: List<String>): String = input.map(CardData::parseCardData).map(CardData::score).sum().toString()
@@ -38,7 +42,7 @@ object Day4 {
         val cardMultiplierCount = mutableMapOf<Int, Int>()
         return cards.map {
             val multiplier = (cardMultiplierCount[it.cardIndex] ?: 0) + 1
-            (it.cardIndex + 1..it.cardIndex + it.winningNumberCount).forEach {
+            it.cardIndexesToCopy().forEach {
                 cardMultiplierCount.merge(it, multiplier) { a, b -> a + b }
             }
             multiplier
