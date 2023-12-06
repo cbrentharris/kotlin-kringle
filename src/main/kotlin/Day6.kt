@@ -45,6 +45,7 @@ object Day6 {
     private fun minAndMaxTimes(time: Long, distance: Long): Pair<Long, Long> {
         val upper = (-time - sqrt(time.toDouble().pow(2) - 4 * (distance + 1))) / -2
         val lower = (-time + sqrt(time.toDouble().pow(2) - 4 * (distance + 1))) / -2
+        // We have to floor the upper because we cannot hold fractional seconds, and have to ceil the lower
         return Pair(floor(upper).toLong(), ceil(lower).toLong())
     }
 }
