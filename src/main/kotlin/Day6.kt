@@ -4,32 +4,32 @@ import kotlin.math.*
 
 object Day6 {
     fun part1(input: List<String>): String {
-        val times = input.first().replace("Time:", "")
-            .trim()
-            .split("\\s+".toRegex())
-            .map { it.toInt() }
-        val distances = input.last().replace("Distance:", "")
-            .trim()
-            .split("\\s+".toRegex())
-            .map { it.toInt() }
+        val parseNumbers: (String, String) -> List<Int> = { str: String, prefix: String ->
+            str.replace(prefix, "")
+                .trim()
+                .split("\\s+".toRegex())
+                .map { it.toInt() }
+        }
+        val times = parseNumbers(input.first(), "Time:")
+        val distances = parseNumbers(input.last(), "Distance:")
 
         return times.zip(distances)
             .map { (time, distance) ->
-                val (maxTime, minTime) = minAndMaxTimes(time.toLong(), distance.toLong())
+                val (maxTime, minTime) = maxAndMinTimes(time.toLong(), distance.toLong())
                 maxTime - minTime + 1
             }.reduce { a, b -> a * b }.toString()
     }
 
     fun part2(input: List<String>): String {
-        val time = input.first().replace("Time:", "")
-            .trim()
-            .replace(" ", "")
-            .toLong()
-        val distance = input.last().replace("Distance:", "")
-            .trim()
-            .replace(" ", "")
-            .toLong()
-        val (maxTime, minTime) = minAndMaxTimes(time, distance)
+        val parseNumber: (String, String) -> Long = { str: String, prefix: String ->
+            str.replace(prefix, "")
+                .trim()
+                .replace(" ", "")
+                .toLong()
+        }
+        val time = parseNumber(input.first(), "Time:")
+        val distance = parseNumber(input.last(), "Distance:")
+        val (maxTime, minTime) = maxAndMinTimes(time, distance)
         // Add 1 to count the upper as inclusive
         return (maxTime - minTime + 1).toString()
     }
@@ -45,9 +45,10 @@ object Day6 {
      *
      * Note, we set distance + 1 because we have to exceed the target distance
      */
-    private fun minAndMaxTimes(time: Long, distance: Long): Pair<Long, Long> {
-        val upper = (-time - sqrt(time.toDouble().pow(2) - 4 * (distance + 1))) / -2
-        val lower = (-time + sqrt(time.toDouble().pow(2) - 4 * (distance + 1))) / -2
+    private fun maxAndMinTimes(time: Long, distance: Long): Pair<Long, Long> {
+        val squareRoot = sqrt(time.toDouble().pow(2) - 4 * (distance + 1))
+        val upper = (-time - squareRoot) / -2
+        val lower = (-time + squareRoot) / -2
         // We have to floor the upper because we cannot hold fractional seconds, and have to ceil the lower
         return floor(upper).toLong() to ceil(lower).toLong()
     }
