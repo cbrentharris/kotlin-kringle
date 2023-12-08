@@ -15,19 +15,15 @@ object Day7 {
         }
 
         override fun compareTo(other: CardHand): Int {
-            return if (maxSimilarCards == other.maxSimilarCards) {
-                if (secondMaxSimilarCards == other.secondMaxSimilarCards) {
-                    val thisCardValues = cards.map { cardValues[it] ?: 0 }
-                    val otherCardValues = other.cards.map { cardValues[it] ?: 0 }
+            return compareBy<CardHand> { it.maxSimilarCards }
+                .thenBy { it.secondMaxSimilarCards }
+                .then { first, second ->
+                    val thisCardValues = first.cards.map { cardValues[it] ?: 0 }
+                    val otherCardValues = second.cards.map { cardValues[it] ?: 0 }
                     thisCardValues.zip(otherCardValues).map { it.first - it.second }.firstOrNull { it != 0 } ?: 0
-                } else {
-                    secondMaxSimilarCards - other.secondMaxSimilarCards
                 }
-            } else {
-                maxSimilarCards - other.maxSimilarCards
-            }
+                .compare(this, other)
         }
-
     }
 
     data class CamelCardHandWithJokers(override val cards: CharArray, override val bid: Long) : CardHand {
