@@ -25,15 +25,11 @@ object Day13 {
     }
 
     private fun isMirror(it: Pair<Int, Int>, grid: List<String>): Boolean {
-        var (a, b) = it
-        while (a >= 0 && b < grid.size) {
-            if (grid[a] != grid[b]) {
-                return false
-            }
-            a--
-            b++
+        val (a, b) = it
+        if (a < 0 || b >= grid.size) {
+            return true
         }
-        return true
+        return grid[a] == grid[b] && isMirror(a - 1 to b + 1, grid)
     }
 
     /**
@@ -71,7 +67,7 @@ object Day13 {
 
     private fun scoreSmudged(grid: List<String>, multiplier: Int): Int {
         val rowsOfMaybeExactness = findLinesOfExactness(grid) + findLinesOffByOne(grid)
-        return rowsOfMaybeExactness.find { isAlmostMirror(it, grid) }?.let {
+        return rowsOfMaybeExactness.find { isAlmostMirror(it, grid, 0) }?.let {
             // Normal is rows, so rows above
             val rowsAbove = it.first + 1
             rowsAbove * multiplier
@@ -83,27 +79,29 @@ object Day13 {
             .map { (a, b) -> a.index to b.index }
     }
 
-    private fun isAlmostMirror(it: Pair<Int, Int>, grid: List<String>): Boolean {
-        var (a, b) = it
-        var offByOnes = 0
-        while (a >= 0 && b < grid.size) {
-            if (grid[a] != grid[b]) {
-                if (isOffByOne(grid[a], grid[b])) {
-                    offByOnes++
-                } else {
-                    // Is not almost a mirror if we are off by more than 1
-                    return false
-                }
-            }
-            a--
-            b++
+    private fun isAlmostMirror(it: Pair<Int, Int>, grid: List<String>, offByOneCount: Int): Boolean {
+        if (offByOneCount > 1) {
+            return false
         }
-        return offByOnes == 1
+        val (a, b) = it
+        if (a < 0 || b >= grid.size) {
+            return offByOneCount == 1
+        }
+        val offByOne = isOffByOne(grid[a], grid[b])
+        val offByMoreThanOne = !offByOne && grid[a] != grid[b]
+        if (offByMoreThanOne) {
+            return false
+        }
+        val newCount = if (offByOne) {
+            offByOneCount + 1
+        } else {
+            offByOneCount
+        }
+        return isAlmostMirror(a - 1 to b + 1, grid, newCount)
     }
 
     private fun isOffByOne(a: String, b: String): Boolean {
-        return (0 until a.length).sumOf { if (a[it] == b[it]) 0L else 1L } == 1L
+        return a.toCharArray().zip(b.toCharArray())
+            .count { (a, b) -> a != b } == 1
     }
-
-
 }
