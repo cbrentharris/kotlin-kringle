@@ -26,10 +26,10 @@ object Day15 {
                 boxes.getOrPut(box) { linkedMapOf() }[label] = focusLength.toInt()
             }
         }
-        return boxes.flatMap { (boxNumber, lenses) ->
-            lenses.values.withIndex().map { (idx, value) ->
+        return boxes.toList().sumOf { (boxNumber, lenses) ->
+            lenses.values.withIndex().sumOf { (idx, value) ->
                 (idx + 1) * value * (boxNumber + 1)
             }
-        }.sum().toString()
+        }.toString()
     }
 }
