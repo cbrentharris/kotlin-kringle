@@ -11,6 +11,10 @@
           <option name="issueRegexp" value="RB[\-=](\d+)" />
           <option name="linkRegexp" value="https://go/rb $1" />
         </IssueNavigationLink>
+        <IssueNavigationLink>
+          <option name="issueRegexp" value="\(#(\d+)\)" />
+          <option name="linkRegexp" value="https://github.com/cbrentharris/kotlin-kringle/issues/$1" />
+        </IssueNavigationLink>
       </list>
     </option>
   </component>

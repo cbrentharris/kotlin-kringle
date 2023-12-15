@@ -3,7 +3,7 @@ import kotlin.String
 import kotlin.collections.List
 
 object Day14 {
-    private val ROUNDED = 'O'
+    private const val ROUNDED = 'O'
     fun part1(input: List<String>): String {
         val transposedDish = transpose(input)
         return transposedDish.sumOf { row ->
