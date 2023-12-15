@@ -23,15 +23,12 @@ object Day15 {
             } else {
                 val (label, focusLength) = it.split("=")
                 val box = hash(label)
-                val orderedMap = boxes.getOrPut(box) { linkedMapOf() }
-                orderedMap[label] = focusLength.toInt()
+                boxes.getOrPut(box) { linkedMapOf() }[label] = focusLength.toInt()
             }
         }
         return boxes.flatMap { (boxNumber, lenses) ->
-            val boxNumberOffset = boxNumber + 1
             lenses.values.withIndex().map { (idx, value) ->
-                val ret = (idx + 1) * value * boxNumberOffset
-                ret
+                (idx + 1) * value * (boxNumber + 1)
             }
         }.sum().toString()
     }
