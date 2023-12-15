@@ -40,7 +40,7 @@ object Day13 {
             .map { (a, b) -> a.index to b.index }
     }
 
-    private fun transpose(grid: List<String>): List<String> {
+    fun transpose(grid: List<String>): List<String> {
         val transposedGrid = List(grid[0].length) { CharArray(grid.size) }
         for (i in grid.indices) {
             for (j in grid[0].indices) {
