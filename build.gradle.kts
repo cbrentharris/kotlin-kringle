@@ -21,6 +21,10 @@ dependencies {
 }
 
 tasks.test {
+    maxHeapSize = "2g"
+
+    // Set other JVM options if needed
+//    jvmArgs = ["-Xmx512m", "-XX:MaxPermSize=256m"]
     useJUnitPlatform()
 }
 
